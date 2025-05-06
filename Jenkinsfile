@@ -14,7 +14,7 @@ pipeline {
         stage ('Git Checkout') {
             steps {
                 script {
-                    git branch: 'infra', url: 'https://github.com/Sooraj7340/AWS-Infra-Automation.git'
+                    git branch: 'main', url: 'https://github.com/Sooraj7340/AWS-Infra-Automation.git'
                 }
             }
         }
@@ -22,7 +22,6 @@ pipeline {
         stage ('Plan') {
             steps {
                 sh '''
-                    cd terraform
                     terraform init
                     terraform plan -out=tfplan
                     terraform show -no-color tfplan > tfplan.txt
@@ -33,7 +32,7 @@ pipeline {
         stage ('Approval') {
             steps {
                 script {
-                    def plan = readFile 'terraform/tfplan.txt'
+                    def plan = readFile 'tfplan.txt'
                     input message: "Do you want to proceed with the Terraform action?",
                     parameters: [text(name: 'Plan', description: 'Please review the plan', defaultValue: plan)]
                 }
@@ -49,9 +48,9 @@ pipeline {
             steps {
                 script {
                     if (params.terraformAction == 'apply') {
-                        sh "cd terraform/ ; terraform apply -input=false tfplan"
+                        sh "terraform apply -input=false tfplan"
                     } else if (params.terraformAction == 'destroy') {
-                        sh "cd terraform/ ; terraform destroy -auto-approve"
+                        sh "terraform destroy -auto-approve"
                     }
                 }
             }

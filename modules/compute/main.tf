@@ -4,7 +4,7 @@ variable "sg_id" {}
 variable "private_subnets" {}
 
 resource "aws_instance" "jump_server" {
-  ami                    = "ami-0c55b159cbfafe1f0"
+  ami                    = "ami-0fc5d935ebf8bc3bc"
   instance_type          = "t2.micro"
   subnet_id              = var.subnet_id
   vpc_security_group_ids = [var.sg_id]
@@ -17,7 +17,7 @@ resource "aws_instance" "jump_server" {
 
 resource "aws_launch_template" "app_lt" {
   name_prefix   = "app-lt-"
-  image_id      = "ami-0c55b159cbfafe1f0"
+  image_id      = "ami-0fc5d935ebf8bc3bc"
   instance_type = "t2.micro"
   vpc_security_group_ids = [var.sg_id]
 }
